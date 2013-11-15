@@ -128,6 +128,9 @@ public class UserManagerImpl implements UserManager, UserDetailsService {
         // Create the patient mapping in patient view so patient view knows the user is a patient
         userDao.createRoleInPatientView(patientUser.getId(), PATIENT_VIEW_GROUP);
 
+        // Create the patient mapping in radar
+        userDao.saveUserMapping(patientUser);
+
         // Map the Renal Unit
         if (!userDao.userExistsInPatientView(patient.getNhsno(), patient.getRenalUnit().getUnitCode())) {
             userDao.createUserMappingInPatientView(patientUser.getUsername(),
@@ -202,7 +205,7 @@ public class UserManagerImpl implements UserManager, UserDetailsService {
             patientUser.setPassword(generateRandomPassword());
             patientUser.setEmail(patient.getEmailAddress());
 
-            patientUser = userDao.createPatientViewUser(patientUser);
+            patientUser = (PatientUser) userDao.createPatientViewUser(patientUser);
         }
 
         return patientUser;

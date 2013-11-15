@@ -1,6 +1,7 @@
 package org.patientview.radar.test.dao;
 
 import org.junit.Before;
+import org.junit.Test;
 import org.patientview.model.Centre;
 import org.patientview.model.Patient;
 import org.patientview.model.enums.NhsNumberType;
@@ -8,8 +9,6 @@ import org.patientview.model.generic.DiseaseGroup;
 import org.patientview.radar.dao.DemographicsDao;
 import org.patientview.radar.dao.UserDao;
 import org.patientview.radar.dao.UtilityDao;
-
-import org.patientview.radar.dao.generic.DiseaseGroupDao;
 import org.patientview.radar.model.filter.PatientUserFilter;
 import org.patientview.radar.model.filter.ProfessionalUserFilter;
 import org.patientview.radar.model.user.AdminUser;
@@ -18,7 +17,6 @@ import org.patientview.radar.model.user.ProfessionalUser;
 import org.patientview.radar.model.user.User;
 import org.patientview.radar.test.TestDataHelper;
 import org.patientview.radar.util.RadarUtility;
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +65,8 @@ public class UserDaoTest extends BaseDaoTest {
         testDataHelper.createSpecialty();
     }
 
+
+    //** You create an admin user and then use the rdr_mapping
     @Test
     public void testAddGetUser() throws Exception {
         AdminUser adminUser = new AdminUser();
@@ -76,6 +76,10 @@ public class UserDaoTest extends BaseDaoTest {
         adminUser.setPassword(User.getPasswordHash(RadarUtility.generateNewPassword()));
 
         userDao.saveAdminUser(adminUser);
+        userDao.createPatientViewUser(adminUser);
+        adminUser.setUserId(adminUser.getId());
+        userDao.saveUserMapping(adminUser);
+
 
         User checkUser = userDao.getUser(adminUser.getEmail());
 
@@ -161,6 +165,10 @@ public class UserDaoTest extends BaseDaoTest {
 
         // Save
         userDao.savePatientUser(patientUser);
+        userDao.createPatientViewUser(patientUser);
+        patientUser.setUserId(patientUser.getId());
+        userDao.saveUserMapping(patientUser);
+
 
         // Make sure we have an ID and a date registered
         assertTrue("Saved user doesn't have an ID", patientUser.getId() > 0);
@@ -183,7 +191,9 @@ public class UserDaoTest extends BaseDaoTest {
 
         // Save
         userDao.savePatientUser(patientUser);
-
+        userDao.createPatientViewUser(patientUser);
+        patientUser.setUserId(patientUser.getId());
+        userDao.saveUserMapping(patientUser);
         return patientUser;
     }
 
@@ -326,7 +336,9 @@ public class UserDaoTest extends BaseDaoTest {
         patientUser.setDateRegistered(new Date());
 
         userDao.savePatientUser(patientUser);
-
+        userDao.createPatientViewUser(patientUser);
+        patientUser.setUserId(patientUser.getId());
+        userDao.saveUserMapping(patientUser);
         PatientUser checkPatientUser = userDao.getPatientUser(patientUser.getEmail());
 
         assertNotNull(checkPatientUser);
@@ -349,6 +361,10 @@ public class UserDaoTest extends BaseDaoTest {
         patientUser.setDateRegistered(new Date());
 
         userDao.savePatientUser(patientUser);
+        userDao.createPatientViewUser(patientUser);
+        patientUser.setUserId(patientUser.getId());
+        userDao.saveUserMapping(patientUser);
+
 
         PatientUser checkPatientUser = userDao.getPatientUser(patientUser.getId());
 
@@ -386,6 +402,9 @@ public class UserDaoTest extends BaseDaoTest {
         patientUser1.setDateRegistered(new Date());
 
         userDao.savePatientUser(patientUser1);
+        userDao.createPatientViewUser(patientUser1);
+        patientUser1.setUserId(patientUser1.getId());
+        userDao.saveUserMapping(patientUser1);
 
         PatientUser patientUser2 = new PatientUser();
         patientUser2.setRadarNumber(2);
@@ -396,6 +415,9 @@ public class UserDaoTest extends BaseDaoTest {
         patientUser2.setDateRegistered(new Date());
 
         userDao.savePatientUser(patientUser2);
+        userDao.createPatientViewUser(patientUser2);
+        patientUser2.setUserId(patientUser2.getId());
+        userDao.saveUserMapping(patientUser2);
 
         PatientUserFilter patientUserFilter = new PatientUserFilter();
         patientUserFilter.setReverse(false);
@@ -422,6 +444,9 @@ public class UserDaoTest extends BaseDaoTest {
         patientUser1.setDateRegistered(new Date());
 
         userDao.savePatientUser(patientUser1);
+        userDao.createPatientViewUser(patientUser1);
+        patientUser1.setUserId(patientUser1.getId());
+        userDao.saveUserMapping(patientUser1);
 
         PatientUser patientUser2 = new PatientUser();
         patientUser2.setRadarNumber(2);
@@ -432,6 +457,9 @@ public class UserDaoTest extends BaseDaoTest {
         patientUser2.setDateRegistered(new Date());
 
         userDao.savePatientUser(patientUser2);
+        userDao.createPatientViewUser(patientUser2);
+        patientUser2.setUserId(patientUser2.getId());
+        userDao.saveUserMapping(patientUser2);
 
         PatientUserFilter patientUserFilter = new PatientUserFilter();
         patientUserFilter.addSearchCriteria(PatientUserFilter.UserField.USERNAME.getDatabaseFieldName(),
